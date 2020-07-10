@@ -6,6 +6,12 @@
 *       (if additional are added, keep them at the very end!)
 */
 
+const compareFloats = (x, y, epsilon) => {
+  // devuelve true si son aproximadamente iguales, dentro de cierto margen
+  //requiere que x, y, epsilon sean números
+  return Math.abs(x - y) < epsilon;
+}
+
 var chai = require('chai');
 var assert = chai.assert;
 var ConvertHandler = require('../controllers/convertHandler.js');
@@ -23,28 +29,37 @@ suite('Unit Tests', function(){
     });
     
     test('Decimal Input', function(done) {
-      
-      //done();
+      let input = '2.5km';
+      assert.equal(convertHandler.getNum(input), 2.5);
+      done();
     });
     
     test('Fractional Input', function(done) {
-      
-      //done();
+      let input = '1/2mi';
+      //acá podría usar assert.almost o assert.approximately
+      assert.isOk(compareFloats(convertHandler.getNum(input), 0.5, 0.1));
+      //assert.equal(convertHandler.getNum(input), ??);
+      done();
     });
     
     test('Fractional Input w/ Decimal', function(done) {
-      
-      //done();
+      let input = '2.5/6gal';
+      //acá podría usar assert.approximately si lo terminara de entender
+      assert.isOk(compareFloats(convertHandler.getNum(input), 0.41666, 0.1));
+      done();
     });
     
     test('Invalid Input (double fraction)', function(done) {
-      
-      //done();
+      let input = '2.5/6/9gal';
+      assert.isNotOk(convertHandler.getNum(input)); // porque Number('2/6/9') da NaN que es falsy
+      // también podría usar assert.isNaN
+      done();
     });
     
     test('No Numerical Input', function(done) {
-      
-      //done();
+      let input = 'kg';
+      assert.equal(convertHandler.getNum(input), 1);
+      done();
     }); 
     
   });

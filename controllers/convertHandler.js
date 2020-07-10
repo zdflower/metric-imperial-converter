@@ -38,7 +38,7 @@ function ConvertHandler() {
       return 1;
     }
     else {
-      return Number(result);  
+      return Number(result);  //esto puede ser NaN si hay caracteres no alfanuméricos que no conformen un número válido.
     }
   };
   
