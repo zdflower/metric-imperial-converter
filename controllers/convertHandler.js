@@ -49,14 +49,15 @@ function ConvertHandler() {
     let result = input.substring(indiceTope);
     
     
-    return result.toLowerCase();
+    return result.toLowerCase(); // ¿y si no hay ninguna letra en input? OCUPARSE DE ESTO. En algún lado hay que chequear.
   };
   
   // dependiendo de la unidad provista por el usuario, que tiene que ser una de un grupo finito de posibilidades,
   // sabremos la unidad de conversión, puesto que también está predefinido y hay una sola para cada entrada.
   this.getReturnUnit = function(initUnit) {
     // requiere que initUnit esté en lowercase. lo cual vendría asegurado por getUnit, que es como se obtiene la unidad y es el valor que se pasa a esta función
-    var result = UNITS[initUnit];
+    
+    var result = UNITS[initUnit]; //¿qué pasa si initUnit no es una clave del diccionario?
     
     return result;
   };
@@ -111,6 +112,7 @@ function ConvertHandler() {
    
   
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
+  
     var result = `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum.toFixed(5)} ${this.spellOutUnit(returnUnit)}`;
     
     return result;

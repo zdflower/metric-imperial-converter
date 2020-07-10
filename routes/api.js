@@ -45,8 +45,12 @@ module.exports = function (app) {
     
     
       var input = req.query.input;
+    
       var initNum = convertHandler.getNum(input);
       var initUnit = convertHandler.getUnit(input);
+    
+    // si lo de arriba está bien, entonces seguir con esto:
+    
       var returnNum = convertHandler.convert(initNum, initUnit);
       var returnUnit = convertHandler.getReturnUnit(initUnit);
       var toString = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
@@ -59,6 +63,12 @@ module.exports = function (app) {
           "returnUnit": returnUnit,
           "string": toString
         });
+    
+    // si no
+    // responder, según el caso:
+    // "invalid unit"
+    // "invalid number"
+    // "invalid unit and number"
     });
     
 };
