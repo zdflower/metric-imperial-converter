@@ -6,6 +6,7 @@
 *       
 */
 
+
 const UNITS = { 'gal': 'l',
                 'lbs': 'kg',
                 'mi': 'km',
@@ -18,14 +19,14 @@ const UNITS_IN_WORDS = { "mi" : "miles",
                          "l": "liters",
                          "gal": "gallons"
                        };
-
-//¿acá se chequea que el input sea válido?
-// Me parece que no, que es en la parte del punto de acceso, en el archivo routes/api.js, antes de que use este módulo
+  
 
 function ConvertHandler() {
-  // acá ya supongo que el input es válido
+
+  this.UNITS = UNITS;
   
-  // acá me parece que va la función que toma el inicio del input
+  // acá ya supongo que el input es válido. <-- No para todas las funciones.
+  
   this.getNum = function(input) {
     let indiceTope = input.search(/[A-Za-z]/); //busca la primer ocurrencia de una letra
     // sí o sí tiene que haber una letra en un input válido
@@ -38,7 +39,7 @@ function ConvertHandler() {
       return 1;
     }
     else {
-      return Number(result);  //esto puede ser NaN si hay caracteres no alfanuméricos que no conformen un número válido.
+      return Number(result);  //esto puede ser NaN si hay caracteres no alfanuméricos que no conformen un número válido. Puedo usar esto para chequear si es un initNum válido.
     }
   };
   
