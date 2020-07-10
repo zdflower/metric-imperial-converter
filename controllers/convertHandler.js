@@ -6,49 +6,63 @@
 *       
 */
 
+const UNITS = { 'gal': 'l',
+                'lbs': 'kg',
+                'mi': 'km',
+                'l': 'gal',
+                'kg': 'lbs',
+                'km': 'mi'
+              };
+
+const UNITS_IN_WORDS = { "mi" : "miles",
+                         "l": "liters",
+                         "gal": "gallons"
+                       };
+
 //¿acá se chequea que el input sea válido?
-
-// si buscamos el índice del primer carácter del input, lo que está adelante debería ser el inputNum,
-// y lo demás sería la unidad
-// Todo esto una vez que nos aseguramos que el formato del input es el adecuado.
-
-//qué input no sería válido
-//qué input number no sería válido
-//qué input unit no sería válida
-
-//sería válido un input sin número pero con una unidad de las aceptadas.
-
-//¿habría que limitar el máximo/mínimo valor a convertir? ¿se podría romper la aplicación con algún caso extremo?
-
-// un patrón válido sería algo así: 0 o varios números seguidos de 0 o un . o un / seguido de uno o más números (en el caso de que antes hubiera . o / y si es / entonces no puede seguir un 0)
-// y luego tiene que seguir uno o más caractéres alfabéticos, más precisamente coincidentes con: lbs o gal o km o mi o L o kg
-
-
+// Me parece que no, que es en la parte del punto de acceso, en el archivo routes/api.js, antes de que use este módulo
 
 function ConvertHandler() {
+  // acá ya supongo que el input es válido
   
+  // acá me parece que va la función que toma el inicio del input
   this.getNum = function(input) {
-    var result;
+    let indiceTope = input.search(/[A-Za-z]/); //busca la primer ocurrencia de una letra
+    // sí o sí tiene que haber una letra en un input válido
+    //puede ser que el índiceTope sea 0, es decir que no se pasó un número, sólo una unidad.
     
-    return result;
+    // 0 <= indiceTope < input.length || indiceTope = -1
+    
+    let result = input.substring(0, indiceTope); // result puede ser una cadena vacía
+    if(result === ''){
+      return 1;
+    }
+    else {
+      return Number(result);  
+    }
   };
   
   this.getUnit = function(input) {
-    var result;
+    let indiceTope = input.search(/[A-Za-z]/); //busca la primer ocurrencia de una letra
+    // sí o sí tiene que haber una letra en un input válido
+    //puede ser que el índiceTope sea 0, es decir que no se pasó un número, sólo una unidad.
+    let result = input.substring(indiceTope);
     
-    return result;
+    
+    return result.toLowerCase();
   };
   
   // dependiendo de la unidad provista por el usuario, que tiene que ser una de un grupo finito de posibilidades,
   // sabremos la unidad de conversión, puesto que también está predefinido y hay una sola para cada entrada.
   this.getReturnUnit = function(initUnit) {
-    var result;
+    // requiere que initUnit esté en lowercase. lo cual vendría asegurado por getUnit, que es como se obtiene la unidad y es el valor que se pasa a esta función
+    var result = UNITS[initUnit];
     
     return result;
   };
 
   this.spellOutUnit = function(unit) {
-    var result;
+    var result = UNITS_IN_WORDS[unit];
     
     return result;
   };
@@ -63,21 +77,41 @@ function ConvertHandler() {
   // gal: tenés que usar el factor galToL
   
   this.convert = function(initNum, initUnit) {
+    // requiere que initNum sea de tipo Number
+    // requiere que initUnit sea String y esté en lowercase
+    // requiere que initUnit sea una de las posibles unidades válidas
+    
     const galToL = 3.78541;
     const lbsToKg = 0.453592;
     const miToKm = 1.60934;
+    
     var result;
+    
+    switch(initUnit){
+      case "gal":
+        result = initNum * galToL;
+        break;
+      case "l":
+        result = initNum / galToL; // chequear que esta división da lo que se supone
+        break;
+      case "lbs":
+        result = initNum * lbsToKg;
+      case "kg":
+        result = initNum / lbsToKg;
+      case "mi":
+        result = initNum * miToKm;
+      case "km":
+        result = initNum / miToKm;   
+    }    
     
     return result;
   };
 
   //el resultado tiene que estar redondeado a 5 decimales
-  // en algún lado tiene que haber una especie de tabla que sirva para traducir las abreviaturas de las unidades a las palabras enteras para poder construir la cadena.
-  // algo así como 
-  const tablaUnidades = { "mi" : "miles", "L": "liters", "gal": "gallons"}; // me parece que la función spelloutunit tiene que ver con eso
+   
   
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-    var result = `${initNum} ${tablaUnidades[initUnit]} converts to ${returnNum} ${tablaUnidades[returnUnit]}`;
+    var result = `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum} ${this.spellOutUnit(returnUnit)}`;
     
     return result;
   };
