@@ -21,6 +21,14 @@ const UNITS_IN_WORDS = { "mi" : "miles",
                        };
   
 
+const cadenaFraccionANumero = fraccion => {
+  //requiere que fracción sea una cadena que contenga 'x/y'
+  let numeros = fraccion.split('/');
+  let numerador = Number(numeros[0]);
+  let denominador = Number(numeros[1]);
+  return numerador / denominador;
+};
+
 function ConvertHandler() {
 
   this.UNITS = UNITS;
@@ -38,8 +46,26 @@ function ConvertHandler() {
     if(result === ''){
       return 1;
     }
+    
+    //si incluye / pero no incluye dos /
+    // o 
+    // si parto result en más de dos cadenas mediante el separador '/' entonces es una fracción inválida
+    //puedo chequear si result incluye / y después la longitud de hacer split por /
+    
+    else if (result.includes('/') && !/\d+\/\d+\/\d+/.test(result)){
+
+      //console.log(result)
+      //console.log(cadenaFraccionANumero(result))
+      return cadenaFraccionANumero(result);
+      
+    }
     else {
+  //console.log(result)
       return Number(result);  //esto puede ser NaN si hay caracteres no alfanuméricos que no conformen un número válido. Puedo usar esto para chequear si es un initNum válido.
+      
+      // VER por qué para input = '1/2mi' devuelve NaN?
+      // RESPUESTA: porque no convierte de string '1/2' a número
+      // podrías detectar si en result hay un '/' y en ese caso tomar lo que está antes y dividirlo por lo que está después, cada uno en formato número.
     }
   };
   
@@ -57,6 +83,7 @@ function ConvertHandler() {
   // sabremos la unidad de conversión, puesto que también está predefinido y hay una sola para cada entrada.
   this.getReturnUnit = function(initUnit) {
     // requiere que initUnit esté en lowercase. lo cual vendría asegurado por getUnit, que es como se obtiene la unidad y es el valor que se pasa a esta función
+    // pero tal vez no debiera depender de ello?
     
     var result = UNITS[initUnit]; //¿qué pasa si initUnit no es una clave del diccionario?
     

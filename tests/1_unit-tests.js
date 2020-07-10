@@ -37,7 +37,10 @@ suite('Unit Tests', function(){
     test('Fractional Input', function(done) {
       let input = '1/2mi';
       //acá podría usar assert.almost o assert.approximately
-      assert.isOk(compareFloats(convertHandler.getNum(input), 0.5, 0.1));
+      //console.log(convertHandler.getNum(input));
+      // el problema no está acá si no en convertHandler que no maneja el caso de convertir una cadena 'número/número' a tipo numérico.
+      //assert.equals(compareFloats(convertHandler.getNum(input), 0.5, 0.1), true);
+      assert.isOk(compareFloats(convertHandler.getNum(input), 0.5, 0.1))
       //assert.equal(convertHandler.getNum(input), ??);
       done();
     });
@@ -45,6 +48,7 @@ suite('Unit Tests', function(){
     test('Fractional Input w/ Decimal', function(done) {
       let input = '2.5/6gal';
       //acá podría usar assert.approximately si lo terminara de entender
+      //assert.equals(compareFloats(convertHandler.getNum(input), 0.41666, 0.1), true);
       assert.isOk(compareFloats(convertHandler.getNum(input), 0.41666, 0.1));
       done();
     });
@@ -69,7 +73,7 @@ suite('Unit Tests', function(){
     test('For Each Valid Unit Inputs', function(done) {
       var input = ['gal','l','mi','km','lbs','kg','GAL','L','MI','KM','LBS','KG'];
       input.forEach(function(ele, i) {
-        assert.equal(convertHandler.getReturnUnit(ele), input[i].toLowerCase());
+        assert.equal(convertHandler.getUnit(ele.toLowerCase()), input[i].toLowerCase());
       });
       done();
     });
@@ -138,5 +142,16 @@ suite('Unit Tests', function(){
     });
     
   });
+  
+  suite('Function compareFloats(f1,f2,tolerance)', function() {
+    test('1/2 y 0.5 con 0.1 de tolerancia', function(done){
+      let x = 1/2;
+      let y = 0.5;
+      let epsilon = 0.1
+      let result = true;//Math.abs(x - y) < epsilon
+      assert.equal(compareFloats(x,y,epsilon, result));
+      done();
+    })
+  })
 
 });
