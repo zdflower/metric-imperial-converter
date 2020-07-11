@@ -7,8 +7,8 @@
 */
 
 const compareFloats = (x, y, epsilon) => {
-  // devuelve true si son aproximadamente iguales, dentro de cierto margen
-  //requiere que x, y, epsilon sean números
+  // Devuelve true si son aproximadamente iguales, dentro de cierto margen.
+  // Requiere que x, y, epsilon sean números
   return Math.abs(x - y) < epsilon;
 }
 
@@ -36,26 +36,20 @@ suite('Unit Tests', function(){
     
     test('Fractional Input', function(done) {
       let input = '1/2mi';
-      //acá podría usar assert.almost o assert.approximately
-      //console.log(convertHandler.getNum(input));
-      // el problema no está acá si no en convertHandler que no maneja el caso de convertir una cadena 'número/número' a tipo numérico.
-      //assert.equals(compareFloats(convertHandler.getNum(input), 0.5, 0.1), true);
       assert.isOk(compareFloats(convertHandler.getNum(input), 0.5, 0.1))
       done();
     });
     
     test('Fractional Input w/ Decimal', function(done) {
       let input = '2.5/6gal';
-      //acá podría usar assert.approximately si lo terminara de entender
-      //assert.equals(compareFloats(convertHandler.getNum(input), 0.41666, 0.1), true);
       assert.isOk(compareFloats(convertHandler.getNum(input), 0.41666, 0.1));
       done();
     });
     
     test('Invalid Input (double fraction)', function(done) {
       let input = '2.5/6/9gal';
-      assert.isNotOk(convertHandler.getNum(input)); // porque Number('2/6/9') da NaN que es falsy
-      // también podría usar assert.isNaN
+      assert.isNotOk(convertHandler.getNum(input)); // Porque Number('2.5/6/9') da NaN que es falsy
+      // También podría usar assert.isNaN
       done();
     });
     
@@ -78,10 +72,8 @@ suite('Unit Tests', function(){
     });
     
     test('Unknown Unit Input', function(done) {
-      //¿este sería el caso en que tenés una cadena que no se corresponde con ninguna de las claves de  convertHandler.UNITS?
-      //ok, y entonces qué tengo que evaluar, si input tiene una unidad que es cualquiera, cuál sería la respuesta correcta de convertHandler.getUnit(input)?
-      
-      //según como tengo escrita la función, si input = '12garlochas' debería devolver 'garlochas'
+      // Si input tiene una unidad no aceptada, ¿cuál sería la respuesta correcta de convertHandler.getUnit(input)?
+      // Según lo que hace la función como está escrita, si input = '12garlochas', debería devolver 'garlochas'
       let input = '12garlochas';
       let expected = 'garlochas';
       assert.equal(convertHandler.getUnit(input), expected);
@@ -110,7 +102,6 @@ suite('Unit Tests', function(){
       var input = ['gal','l','mi','km','lbs','kg'];
       var expect = ['gallons','liters','miles','kilometers','pounds','kilograms'];
       input.forEach(function(ele, i) {
-        //console.log(`${ele} => ${expect[i]}`);
         assert.equal(convertHandler.spellOutUnit(ele), expect[i]);
       });
       done();
@@ -137,10 +128,6 @@ suite('Unit Tests', function(){
     test('Mi to Km', function(done) {
       var input = [2, 'mi'];
       var expected = 2 * 1.60934;
-      //console.log(input[0])
-      //console.log(expected)
-      //console.log(convertHandler.convert(input[0], input[1]))
-      //assert.isOk(compareFloats(input, expected, 0.1))
       assert.approximately(convertHandler.convert(input[0],input[1]),expected,0.1); //0.1 tolerance
       done();
     });
@@ -174,8 +161,6 @@ suite('Unit Tests', function(){
       let y = 0.5;
       let epsilon = 0.1
       let result = true;//Math.abs(x - y) < epsilon
-      //console.log(compareFloats(x,y,epsilon))
-      //console.log(Math.abs(x-y) < epsilon)
       assert.equal(compareFloats(x,y,epsilon), result);
       done();
     })

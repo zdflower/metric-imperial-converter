@@ -6,6 +6,8 @@
 *       
 */
 
+// A mejorar: reorganizar el chequeo de si el input es válido para número y unidad en una sola parte del código y no tan repartida.
+
 const UNITS = { 'gal': 'l',
                 'lbs': 'kg',
                 'mi': 'km',
@@ -36,12 +38,10 @@ function ConvertHandler() {
 
   this.UNITS = UNITS;
   
-  // acá ya supongo que el input es válido. <-- No para todas las funciones.
-  
   this.getNum = function(input) {
-    let indiceTope = input.search(/[A-Za-z]/); //busca la primer ocurrencia de una letra
-    // sí o sí tiene que haber una letra en un input válido
-    //puede ser que el índiceTope sea 0, es decir que no se pasó un número, sólo una unidad.
+    let indiceTope = input.search(/[A-Za-z]/); // Busca la primer ocurrencia de una letra
+    // Sí o sí tiene que haber una letra en un input válido
+    // Puede ser que el índiceTope sea 0, es decir que no se pasó un número, sólo una unidad.
     
     // 0 <= indiceTope < input.length || indiceTope = -1
     
@@ -49,74 +49,40 @@ function ConvertHandler() {
     if(result === ''){
       return 1;
     }
-    
-    //si incluye / pero no incluye dos /
-    // o 
-    // si parto result en más de dos cadenas mediante el separador '/' entonces es una fracción inválida
-    //puedo chequear si result incluye / y después la longitud de hacer split por /
-
-    
-    // con /\d+\/\d+\/\d+/ no detecta que esto 3/7.2/4kg tenga un número inválido 
-    // Pienso que con las correcciones va a funcionar, estaba incompleta la regex
     else if (result.includes('/') && !INVALID_NUMBER_PATTERN.test(result)){
-
-      //console.log(result)
-      //console.log(cadenaFraccionANumero(result))
-      return cadenaFraccionANumero(result);
-      
+      return cadenaFraccionANumero(result);   
     }
     else {
-  //console.log(result)
       return Number(result);  //esto puede ser NaN si hay caracteres no alfanuméricos que no conformen un número válido. Puedo usar esto para chequear si es un initNum válido.
-      
-      // VER por qué para input = '1/2mi' devuelve NaN?
-      // RESPUESTA: porque no convierte de string '1/2' a número
-      // podrías detectar si en result hay un '/' y en ese caso tomar lo que está antes y dividirlo por lo que está después, cada uno en formato número.
     }
   };
   
   this.getUnit = function(input) {
-    let indiceTope = input.search(/[A-Za-z]/); //busca la primer ocurrencia de una letra
-    // sí o sí tiene que haber una letra en un input válido
-    //puede ser que el índiceTope sea 0, es decir que no se pasó un número, sólo una unidad.
+    let indiceTope = input.search(/[A-Za-z]/);
     let result = input.substring(indiceTope);
-    
-    
-    return result.toLowerCase(); // ¿y si no hay ninguna letra en input? OCUPARSE DE ESTO. En algún lado hay que chequear.
-    
-    //¿acá tendría que devolver 'invalid unit' si no es válida?
+    return result.toLowerCase(); // ¿Y si no hay ninguna letra en input? Como search devolvería -1, input.substring(-1) funciona como input.substring(0) es decir que devuelve toda la cadena, que no tendría letras, y sería inválida, pero acá no se está asegurando. <= OJO
+    // ¿Dónde conviene chequear si la unidad es válida?
   };
-  
-  // dependiendo de la unidad provista por el usuario, que tiene que ser una de un grupo finito de posibilidades,
-  // sabremos la unidad de conversión, puesto que también está predefinido y hay una sola para cada entrada.
+
   this.getReturnUnit = function(initUnit) {
-    // requiere que initUnit esté en lowercase. lo cual vendría asegurado por getUnit, que es como se obtiene la unidad y es el valor que se pasa a esta función
-    // pero tal vez no debiera depender de ello?
+    // Requiere que initUnit esté en lowercase.
+    // getUnit asegura un resultado en lowercase
     
-    var result = UNITS[initUnit]; //¿qué pasa si initUnit no es una clave del diccionario? devuelve undefined
+    var result = UNITS[initUnit]; // ¿Qué pasa si initUnit no es una clave del diccionario? Devuelve undefined
     
     return result;
   };
 
   this.spellOutUnit = function(unit) {
     var result = UNITS_IN_WORDS[unit];
-    
     return result;
   };
   
-  //¿en dónde chequeás que el input sea válido y dónde y cómo respondés que no es válido, cuando sea el caso?
-  
-  // acá ya suponés que todo tiene el formato adecuado, ya está verificado el input
-  // casos para initUnit
-  // si initUnit es:
-  // lbs: tenés que usar el factor lbsToKg
-  // kg: tenés que usar el factor lbsToKg, pero al revés, de forma inversa.
-  // gal: tenés que usar el factor galToL
-  
   this.convert = function(initNum, initUnit) {
-    // requiere que initNum sea de tipo Number
-    // requiere que initUnit sea String y esté en lowercase
-    // requiere que initUnit sea una de las posibles unidades válidas
+    // Se supone que initNum e initUnit tienen el formato adecuado.
+    // Requiere que initNum sea de tipo Number
+    // Requiere que initUnit sea String y esté en lowercase
+    // Requiere que initUnit sea una de las posibles unidades válidas
     
     const galToL = 3.78541;
     const lbsToKg = 0.453592;
@@ -129,7 +95,7 @@ function ConvertHandler() {
         result = initNum * galToL;
         break;
       case "l":
-        result = initNum / galToL; // chequear que esta división da lo que se supone
+        result = initNum / galToL;
         break;
       case "lbs":
         result = initNum * lbsToKg;
@@ -144,20 +110,14 @@ function ConvertHandler() {
         result = initNum / miToKm;   
         break;
     }    
-    
     return result;
   };
-
-  //el resultado tiene que estar redondeado a 5 decimales
-   
   
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-  
+    // El resultado tiene que estar redondeado a 5 decimales
     var result = `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum.toFixed(5)} ${this.spellOutUnit(returnUnit)}`;
-    
     return result;
   };
-  
 }
 
 module.exports = ConvertHandler;

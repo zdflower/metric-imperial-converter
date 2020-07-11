@@ -27,7 +27,7 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           assert.equal(res.body.initNum, 10);
           //assert.equal(res.body.initUnit, 'L');
-         assert.equal(res.body.initUnit, 'l');
+          assert.equal(res.body.initUnit, 'l'); // Lo cambié porque mi función devuelve en lowercase
           assert.approximately(res.body.returnNum, 2.64172, 0.1);
           assert.equal(res.body.returnUnit, 'gal');
           done();
@@ -75,8 +75,7 @@ suite('Functional Tests', function() {
         .end(function(err, res){
           assert.equal(res.status, 200);
           assert.equal(res.body.initNum, 1);
-          //assert.equal(res.body.initUnit, 'L');
-         assert.equal(res.body.initUnit, 'kg');
+          assert.equal(res.body.initUnit, 'kg');
           assert.approximately(res.body.returnNum, 2.2046, 0.1);
           assert.equal(res.body.returnUnit, 'lbs');
           done();
