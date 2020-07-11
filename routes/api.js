@@ -127,16 +127,16 @@ module.exports = function (app) {
     
     
      else if (validezNumero) {
-       res.json({
+       res.status(400).json({
          "error": "invalid unit"
        });
      } 
      else if (validezUnidad) {
-       res.json({"error":"invalid number"});
+       res.status(400).json({"error":"invalid number"});
      }
      else {
        //ambos son inválidos
-       res.json({"error" :"invalid unit and number"});
+       res.status(400).json({"error" :"invalid unit and number"});
      }
   });
 };

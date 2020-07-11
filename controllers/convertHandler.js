@@ -6,7 +6,6 @@
 *       
 */
 
-
 const UNITS = { 'gal': 'l',
                 'lbs': 'kg',
                 'mi': 'km',
@@ -22,7 +21,8 @@ const UNITS_IN_WORDS = { "mi" : "miles",
                          "km": "kilometers",
                          "lbs": "pounds"
                        };
-  
+
+const INVALID_NUMBER_PATTERN = /\d+\W*\d*\/\d+\W*\d*\/\d+\W*\d*/;
 
 const cadenaFraccionANumero = fraccion => {
   //requiere que fracción sea una cadena que contenga 'x/y'
@@ -54,8 +54,11 @@ function ConvertHandler() {
     // o 
     // si parto result en más de dos cadenas mediante el separador '/' entonces es una fracción inválida
     //puedo chequear si result incluye / y después la longitud de hacer split por /
+
     
-    else if (result.includes('/') && !/\d+\/\d+\/\d+/.test(result)){
+    // con /\d+\/\d+\/\d+/ no detecta que esto 3/7.2/4kg tenga un número inválido 
+    // Pienso que con las correcciones va a funcionar, estaba incompleta la regex
+    else if (result.includes('/') && !INVALID_NUMBER_PATTERN.test(result)){
 
       //console.log(result)
       //console.log(cadenaFraccionANumero(result))
