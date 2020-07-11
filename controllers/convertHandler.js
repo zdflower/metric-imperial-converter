@@ -17,7 +17,10 @@ const UNITS = { 'gal': 'l',
 
 const UNITS_IN_WORDS = { "mi" : "miles",
                          "l": "liters",
-                         "gal": "gallons"
+                         "gal": "gallons",
+                         "kg": "kilograms",
+                         "km": "kilometers",
+                         "lbs": "pounds"
                        };
   
 
@@ -77,6 +80,8 @@ function ConvertHandler() {
     
     
     return result.toLowerCase(); // ¿y si no hay ninguna letra en input? OCUPARSE DE ESTO. En algún lado hay que chequear.
+    
+    //¿acá tendría que devolver 'invalid unit' si no es válida?
   };
   
   // dependiendo de la unidad provista por el usuario, que tiene que ser una de un grupo finito de posibilidades,
@@ -85,7 +90,7 @@ function ConvertHandler() {
     // requiere que initUnit esté en lowercase. lo cual vendría asegurado por getUnit, que es como se obtiene la unidad y es el valor que se pasa a esta función
     // pero tal vez no debiera depender de ello?
     
-    var result = UNITS[initUnit]; //¿qué pasa si initUnit no es una clave del diccionario?
+    var result = UNITS[initUnit]; //¿qué pasa si initUnit no es una clave del diccionario? devuelve undefined
     
     return result;
   };
@@ -125,12 +130,16 @@ function ConvertHandler() {
         break;
       case "lbs":
         result = initNum * lbsToKg;
+        break;
       case "kg":
         result = initNum / lbsToKg;
+        break;
       case "mi":
         result = initNum * miToKm;
+        break;
       case "km":
         result = initNum / miToKm;   
+        break;
     }    
     
     return result;

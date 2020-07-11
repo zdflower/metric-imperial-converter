@@ -41,7 +41,6 @@ suite('Unit Tests', function(){
       // el problema no está acá si no en convertHandler que no maneja el caso de convertir una cadena 'número/número' a tipo numérico.
       //assert.equals(compareFloats(convertHandler.getNum(input), 0.5, 0.1), true);
       assert.isOk(compareFloats(convertHandler.getNum(input), 0.5, 0.1))
-      //assert.equal(convertHandler.getNum(input), ??);
       done();
     });
     
@@ -79,8 +78,14 @@ suite('Unit Tests', function(){
     });
     
     test('Unknown Unit Input', function(done) {
-      //¿qué tendría que pasar? 
-      //done();
+      //¿este sería el caso en que tenés una cadena que no se corresponde con ninguna de las claves de  convertHandler.UNITS?
+      //ok, y entonces qué tengo que evaluar, si input tiene una unidad que es cualquiera, cuál sería la respuesta correcta de convertHandler.getUnit(input)?
+      
+      //según como tengo escrita la función, si input = '12garlochas' debería devolver 'garlochas'
+      let input = '12garlochas';
+      let expected = 'garlochas';
+      assert.equal(convertHandler.getUnit(input), expected);
+      done();
     });  
     
   });
@@ -102,6 +107,12 @@ suite('Unit Tests', function(){
     
     test('For Each Valid Unit Inputs', function(done) {
       //see above example for hint
+      var input = ['gal','l','mi','km','lbs','kg'];
+      var expect = ['gallons','liters','miles','kilometers','pounds','kilograms'];
+      input.forEach(function(ele, i) {
+        //console.log(`${ele} => ${expect[i]}`);
+        assert.equal(convertHandler.spellOutUnit(ele), expect[i]);
+      });
       done();
     });
     
@@ -117,28 +128,42 @@ suite('Unit Tests', function(){
     });
     
     test('L to Gal', function(done) {
-      
-      //done();
+      var input = [18, 'l'];
+      var expected = 4.7;
+      assert.approximately(convertHandler.convert(input[0],input[1]),expected,0.1); //0.1 tolerance
+      done();
     });
     
     test('Mi to Km', function(done) {
-      
-      //done();
+      var input = [2, 'mi'];
+      var expected = 2 * 1.60934;
+      //console.log(input[0])
+      //console.log(expected)
+      //console.log(convertHandler.convert(input[0], input[1]))
+      //assert.isOk(compareFloats(input, expected, 0.1))
+      assert.approximately(convertHandler.convert(input[0],input[1]),expected,0.1); //0.1 tolerance
+      done();
     });
     
     test('Km to Mi', function(done) {
-      
-      //done();
+      var input = [18, 'km'];
+      var expected = 18 / 1.60934;
+      assert.approximately(convertHandler.convert(input[0],input[1]),expected,0.1); //0.1 tolerance
+      done();
     });
     
     test('Lbs to Kg', function(done) {
-      
-      //done();
+      var input = [18, 'lbs'];
+      var expected = 18 * 0.453592;
+      assert.approximately(convertHandler.convert(input[0],input[1]),expected,0.1); //0.1 tolerance
+      done();
     });
     
     test('Kg to Lbs', function(done) {
-      
-      //done();
+      var input = [18, 'kg'];
+      var expected = 18 / 0.453592;
+      assert.approximately(convertHandler.convert(input[0],input[1]),expected,0.1); //0.1 tolerance
+      done();
     });
     
   });
@@ -149,7 +174,9 @@ suite('Unit Tests', function(){
       let y = 0.5;
       let epsilon = 0.1
       let result = true;//Math.abs(x - y) < epsilon
-      assert.equal(compareFloats(x,y,epsilon, result));
+      //console.log(compareFloats(x,y,epsilon))
+      //console.log(Math.abs(x-y) < epsilon)
+      assert.equal(compareFloats(x,y,epsilon), result);
       done();
     })
   })
